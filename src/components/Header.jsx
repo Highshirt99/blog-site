@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { images } from "../constants";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/actions/user";
 
 const navItemInfo = [
   {
@@ -85,12 +87,21 @@ const NavItem = ({ item }) => {
 };
 
 const Header = () => {
+  const dispatch = useDispatch();
   const [navIsVisible, setNavIsVisible] = useState(false);
+  const [profileDropdown, setProfileDropdown] = useState(false);
+
+  const userState = useSelector((state) => state.user);
+
 
   const navVisibilityHandler = () => {
     setNavIsVisible((currState) => {
       return !currState;
     });
+  };
+
+  const logoutHandler = () => {
+    dispatch(logout());
   };
 
   return (
@@ -123,9 +134,46 @@ const Header = () => {
               <NavItem key={item.name} item={item} />
             ))}
           </ul>
-          <button className="border-2 bg-transparent mt-5 lg:mt-0 border-blue-500 px-8 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 cursor-pointer hover:text-white transition-all duration-300">
-            Sign in
-          </button>
+          {userState.userInfo ? (
+          <div className="text-white items-center gap-y-5 lg:text-dark-soft flex flex-col lg:flex-row gap-x-2 font-semibold">
+          <div className="relative group">
+            <div className="flex flex-col items-center">
+              <button
+                className="flex gap-x-1 items-center mt-5 lg:mt-0 border-2 border-blue-500 px-6 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300"
+                onClick={() => setProfileDropdown(!profileDropdown)}
+              >
+                    <span>Profile</span>
+                    <MdKeyboardArrowDown />
+                  </button>
+                  <div
+                    className={`${
+                      profileDropdown ? "block" : "hidden"
+                    } transition-all duration-500 pt-4 absolute left-40 lg:left-0  lg:transform lg:translate-y-10 group-hover:block w-max`}
+                  >
+                   <ul className="bg-dark-soft lg:bg-transparent text-center gap-y-3 flex flex-col shadow-lg rounded-lg overflow-hidden p-4">
+                      <button
+                        type="button"
+                        className="hover:bg-dark-hard no-underline hover:text-white w-full px-4 py-2 text-white lg:text-dark-soft rounded-md"
+                      >
+                        Dashboard
+                      </button>
+                      <button
+                        type="button"
+                        onClick={logoutHandler}
+                        className="hover:bg-dark-hard no-underline hover:text-white w-full px-4 py-2 text-white lg:text-dark-soft rounded-md"
+                      >
+                        Logout
+                      </button>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <button className="border-2 bg-transparent mt-5 lg:mt-0 border-blue-500 px-8 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 cursor-pointer hover:text-white transition-all duration-300">
+              Sign in
+            </button>
+          )}
         </div>
       </header>
     </section>
