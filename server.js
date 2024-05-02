@@ -1,8 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const path = require("path");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorHandler");
-
 
 const errorResponserHandler = errorHandler.errorResponserHandler;
 const invalidPathHandler = errorHandler.invalidPathHandler;
@@ -10,6 +10,7 @@ const invalidPathHandler = errorHandler.invalidPathHandler;
 // Routes
 
 const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes"); 
 
 dotenv.config();
 
@@ -20,10 +21,13 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
-app.use("/api/users", userRoutes)
+// static assets
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
-app.use(invalidPathHandler)
+app.use(invalidPathHandler);
 
 app.use(errorResponserHandler);
 

@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken")
-const User = require("../models/User")
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-const verify = jwt.verify
+const verify = jwt.verify;
 
 const authGuard = async (req, res, next) => {
   if (
@@ -10,20 +10,29 @@ const authGuard = async (req, res, next) => {
   ) {
     try {
       const token = req.headers.authorization.split(" ")[1];
-      const {id} = verify(token, process.env.JWT_SECRET)
-      req.user = await User.findById(id).select("-password")
-      next()
+      const { id } = verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(id).select("-password");
+      next();
     } catch (error) {
       let err = new Error("Not authorized, token failed.");
       err.statusCode = 401;
       next(error);
     }
-  }
-  else{
-    let error = new Error("Not authorized, no token.")
+  } else {
+    let error = new Error("Not authorized, no token.");
     error.statusCode = 401;
     next(error);
   }
 };
 
-module.exports = authGuard
+const adminGuard = (req, res, next) => {
+  if (req.user && req.user.admin) {
+    next();
+  } else {
+    let error = new Error("Not authorized as an admin.");
+    error.statusCode = 401;
+    next(error);
+  }
+};
+
+module.exports = {authGuard, adminGuard}
