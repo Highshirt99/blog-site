@@ -25,7 +25,9 @@ const createPost = async (req, res, next) => {
     next(error);
   }
 };
-// Create post
+
+// upate post
+
 const updatePost = async (req, res, next) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug });
@@ -83,6 +85,7 @@ const updatePost = async (req, res, next) => {
   }
 };
 
+// delete post
 const deletePost = async (req, res, next) => {
   try {
     const post = await Post.findOneAndDelete({ slug: req.params.slug });
@@ -90,11 +93,63 @@ const deletePost = async (req, res, next) => {
       const error = new Error("Post not found!");
       return next(error);
     }
-await Comment.deleteMany({ postId: post._id });
+    await Comment.deleteMany({ postId: post._id });
     res.json({ message: "Post is successfully deleted." });
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = { createPost, updatePost, deletePost };
+const getPost = async (req, res, next) => {
+  try {
+    const post = await Post.findOne({
+      slug: req.params.slug,
+    }).populate([
+      { path: "user", select: ["avatar", "name"] },
+      {
+        path: "comments",
+        match: {
+          check: true,
+          parent: null,
+        },
+        populate: [
+          {
+            path: "user",
+            select: ["avatar", "name"],
+          },
+          {
+            path: "replies",
+            match: {
+              check: true,
+            },
+            populate: [{ path: "user", select: ["avatar", "name"] }],
+          },
+        ],
+      },
+    ]);
+    if (!post) {
+      const error = new Error("Post not found");
+      return next(error);
+    }
+    return res.json(post);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAllPosts = async (req, res, next) => {
+  try {
+    const posts = await Post.find({}).populate([
+      {
+        path: "user",
+        select: ["avatar", "name", "verified"],
+      },
+    ]);
+
+    return res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createPost, updatePost, deletePost, getPost, getAllPosts };

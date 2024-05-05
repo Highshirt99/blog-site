@@ -16,7 +16,9 @@ const PostSchema = new Schema(
     categories: [{ type: Schema.Types.ObjectId, ref: "PostCategory" }],
   },
   {
-    timestamps: true,
+    timestamps: true, toJSON: {
+      virtuals: true,
+    }
   }
 );
 
