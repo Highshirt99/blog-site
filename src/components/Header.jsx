@@ -11,23 +11,30 @@ const navItemInfo = [
   {
     name: "Home",
     type: "link",
+    href: "/",
   },
   {
     name: "Articles",
     type: "link",
+    href: "/articles",
   },
   {
     name: "Pages",
     type: "dropdown",
-    items: ["About us", "Contact us"],
+    items: [
+      { title: "About us", href: "/about" },
+      { title: "Contact us", href: "/contact" },
+    ],
   },
   {
     name: "Pricing",
     type: "link",
+    href: "/pricing",
   },
   {
     name: "Faq",
     type: "link",
+    href: "/faq",
   },
 ];
 
@@ -45,8 +52,8 @@ const NavItem = ({ item }) => {
       {item.type === "link" ? (
         <>
           <Link
-            to="/"
-            className="no-underline  px-4 py-2 text-white lg:text-dark-soft"
+            to={item.href}
+            className="px-4 py-2 text-white no-underline lg:text-dark-soft"
           >
             {item.name}
           </Link>
@@ -57,7 +64,7 @@ const NavItem = ({ item }) => {
       ) : (
         <div className="flex flex-col items-center text-white cursor-pointer lg:text-dark-soft ">
           <div
-            className="px-4 py-2 flex gap-x-1 items-center"
+            className="flex items-center px-4 py-2 gap-x-1"
             onClick={toggleDropdownHandler}
           >
             <span>{item.name}</span>
@@ -68,14 +75,14 @@ const NavItem = ({ item }) => {
               dropdown ? "block" : "hidden"
             } transition-all duration-500 pt-4 absolute lg:top-2 left-20 lg:left-0  lg:transform lg:translate-y-10 group-hover:block w-max`}
           >
-            <ul className="bg-dark-soft lg:bg-transparent text-center gap-y-3 flex flex-col shadow-lg rounded-lg overflow-hidden p-4">
+            <ul className="flex flex-col p-4 overflow-hidden text-center rounded-lg shadow-lg bg-dark-soft lg:bg-transparent gap-y-3">
               {item.items.map((page, index) => (
                 <li className="list-none" key={index}>
                   <Link
-                    to="/"
-                    className="hover:bg-dark-hard no-underline hover:text-white w-full px-4 py-2 text-white lg:text-dark-soft rounded-md"
+                    to={page.href}
+                    className="w-full px-4 py-2 text-white no-underline rounded-md hover:bg-dark-hard hover:text-white lg:text-dark-soft"
                   >
-                    {page}
+                    {page.title}
                   </Link>
                 </li>
               ))}
@@ -103,15 +110,15 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
-    navigate("/login")
+    navigate("/login");
   };
 
   return (
     <section className="sticky top-0 left-0 right-0 z-50 bg-white ">
-      <header className=" flex justify-between items-center py-4 px-5 container mx-auto">
-        <div>
+      <header className="container flex items-center justify-between px-5 py-4 mx-auto ">
+        <Link to = "/">
           <img src={images.logo} alt="Logo" className="w-[70px]" />
-        </div>
+        </Link>
 
         <div className="z-50 lg:hidden">
           {navIsVisible ? (
@@ -137,11 +144,11 @@ const Header = () => {
             ))}
           </ul>
           {userState.userInfo ? (
-            <div className="text-white items-center gap-y-5 lg:text-dark-soft flex flex-col lg:flex-row gap-x-2 font-semibold">
+            <div className="flex flex-col items-center font-semibold text-white gap-y-5 lg:text-dark-soft lg:flex-row gap-x-2">
               <div className="relative group">
                 <div className="flex flex-col items-center">
                   <button
-                    className="flex gap-x-1 items-center mt-5 lg:mt-0 border-2 border-blue-500 px-6 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300"
+                    className="flex items-center px-6 py-2 mt-5 font-semibold text-blue-500 transition-all duration-300 border-2 border-blue-500 rounded-full gap-x-1 lg:mt-0 hover:bg-blue-500 hover:text-white"
                     onClick={() => setProfileDropdown(!profileDropdown)}
                   >
                     <span>Account</span>
@@ -152,18 +159,18 @@ const Header = () => {
                       profileDropdown ? "block" : "hidden"
                     } transition-all duration-500 pt-4 absolute left-40 lg:left-0  lg:transform lg:translate-y-10 group-hover:block w-max`}
                   >
-                    <ul className="bg-dark-soft lg:bg-transparent text-center gap-y-3 flex flex-col shadow-lg rounded-lg overflow-hidden p-4">
+                    <ul className="flex flex-col p-4 overflow-hidden text-center rounded-lg shadow-lg bg-dark-soft lg:bg-transparent gap-y-3">
                       <button
                         type="button"
                         onClick={() => navigate("/profile")}
-                        className="hover:bg-dark-hard no-underline hover:text-white w-full px-4 py-2 text-white lg:text-dark-soft rounded-md"
+                        className="w-full px-4 py-2 text-white no-underline rounded-md hover:bg-dark-hard hover:text-white lg:text-dark-soft"
                       >
                         Profile Page
                       </button>
                       <button
                         type="button"
                         onClick={logoutHandler}
-                        className="hover:bg-dark-hard no-underline hover:text-white w-full px-4 py-2 text-white lg:text-dark-soft rounded-md"
+                        className="w-full px-4 py-2 text-white no-underline rounded-md hover:bg-dark-hard hover:text-white lg:text-dark-soft"
                       >
                         Logout
                       </button>
@@ -174,7 +181,7 @@ const Header = () => {
             </div>
           ) : (
             <button
-              className="border-2 bg-transparent mt-5 lg:mt-0 border-blue-500 px-8 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 cursor-pointer hover:text-white transition-all duration-300"
+              className="px-8 py-2 mt-5 font-semibold text-blue-500 transition-all duration-300 bg-transparent border-2 border-blue-500 rounded-full cursor-pointer lg:mt-0 hover:bg-blue-500 hover:text-white"
               onClick={() => navigate("/login")}
             >
               Sign in

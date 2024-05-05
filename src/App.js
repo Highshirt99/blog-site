@@ -12,7 +12,7 @@ function App() {
     <div className="font-bodyFont">
       <Routes>
         <Route index path="/" element={<Homepage />} />
-        <Route path="/blog/:id" element={<ArticleDetailPage />} />
+        <Route path="/blog/:slug" element={<ArticleDetailPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />

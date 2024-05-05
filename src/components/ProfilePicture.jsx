@@ -3,12 +3,38 @@ import { stables } from "../constants";
 import { HiOutlineCamera } from "react-icons/hi";
 import CropEasy from "./crop/CropEasy";
 import { createPortal } from "react-dom";
+import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProfilePicture } from "../services/index/users";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { userActions } from "../store/reducers/userReducers";
 
 const ProfilePicture = ({ avatar }) => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.user);
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
 
-  
+  const { mutate } = useMutation({
+    mutationFn: ({ token, formData }) => {
+      return updateProfilePicture({
+        token: token,
+        formData: formData,
+      });
+    },
+    onSuccess: (data) => {
+      dispatch(userActions.setUserInfo(data));
+      setOpenCrop(false);
+      localStorage.setItem("account", JSON.stringify(data));
+      queryClient.invalidateQueries(["profile"]);
+      toast.success("Profile Photo is removed");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.log(error);
+    },
+  });
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -16,30 +42,46 @@ const ProfilePicture = ({ avatar }) => {
     setOpenCrop(true);
   };
 
+  const handleDeleteImage = () => {
+    if (
+      window.confirm("Are you sure you want to delete your profile picture?")
+    ) {
+      try {
+        const formData = new FormData();
+        formData.append("profilePicture", undefined);
+
+        mutate({ token: userState.userInfo.token, formData: formData });
+      } catch (error) {
+        toast.error(error.message);
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <>
       {openCrop &&
         createPortal(
-          <CropEasy photo={photo} setOpenCrop={setOpenCrop}/>,
+          <CropEasy photo={photo} setOpenCrop={setOpenCrop} />,
 
           document.getElementById("portal")
         )}
-      <div className="w-full flex items-center gap-x-4 mb-2">
-        <div className="relative w-20 h-20 rounded-full outline outline-offset-2 outline-1 outline-primary overflow-hidden">
+      <div className="flex items-center w-full mb-2 gap-x-4">
+        <div className="relative w-20 h-20 overflow-hidden rounded-full outline outline-offset-2 outline-1 outline-primary">
           <label
             htmlFor="profilePicture"
-            className="cursor-pointer absolute inset-0 rounded-full bg-transparent"
+            className="absolute inset-0 bg-transparent rounded-full cursor-pointer"
           >
             {" "}
             {avatar ? (
               <img
                 src={stables.UPLOAD_FOLDER_BASE_URL + avatar}
                 alt="profile"
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
               />
             ) : (
-              <div className="w-full h-full bg-blue-50/50 flex justify-center item-center">
-                <HiOutlineCamera className="w-7 h-auto text-primary" />
+              <div className="flex justify-center w-full h-full bg-blue-50/50 item-center">
+                <HiOutlineCamera className="h-auto w-7 text-primary" />
               </div>
             )}
           </label>
@@ -51,8 +93,9 @@ const ProfilePicture = ({ avatar }) => {
           />
         </div>
         <button
+          onClick={handleDeleteImage}
           type="button"
-          className="border border-red-500 rounded-lg px-4 py-2 text-red-500"
+          className="px-4 py-2 text-red-500 border border-red-500 rounded-lg"
         >
           Delete
         </button>

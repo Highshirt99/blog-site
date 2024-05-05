@@ -3,70 +3,69 @@ import { getCommentsData } from "../../data/comments";
 import CommentForm from "./CommentForm";
 import { Comment } from "./Comment";
 
-const CommentsContainer = ({ className, loggedInUserId }) => {
-  const [comments, setComments] = useState([]);
+const CommentsContainer = ({ className, loggedInUserId, comments }) => {
+  // const [comments, setComments] = useState([]);
+  // const mainComments = comments.filter((comment) => comment.parent === null);
+
   const [affectedComment, setAffectedComment] = useState(null);
-  const mainComments = comments.filter((comment) => comment.parent === null);
 
-  // console.log(comments);
-
-  useEffect(() => {
-    (async () => {
-      const commentData = await getCommentsData();
-      setComments(commentData);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const commentData = await getCommentsData();
+  //     setComments(commentData);
+  //   })();
+  // }, []);
 
   const addCommentHandler = (value, parent = null, replyOnUser = null) => {
-    const newComment = {
-      _id: Math.random().toString(),
-      user: {
-        _id: "a",
-        name: "Mohammad Rezaii",
-      },
-      desc: value,
-      post: "1",
-      parent,
-      replyOnUser,
-      createdAt: new Date().toISOString(),
-    };
+    // const newComment = {
+    //   _id: Math.random().toString(),
+    //   user: {
+    //     _id: "a",
+    //     name: "Mohammad Rezaii",
+    //   },
+    //   desc: value,
+    //   post: "1",
+    //   parent,
+    //   replyOnUser,
+    //   createdAt: new Date().toISOString(),
+    // };
 
-    setComments((curState) => {
-      return [newComment, ...curState];
-    });
+    // setComments((curState) => {
+    //   return [newComment, ...curState];
+    // });
     setAffectedComment(null);
   };
 
   const updateCommentHandler = (value, commentId) => {
-    const updatedComments = comments.map((comment) => {
-      if (comment._id === commentId) {
-        return {
-          ...comment,
-          desc: value,
-        };
-      }
-      return comment;
-    });
-    setComments(updatedComments);
+    // const updatedComments = comments.map((comment) => {
+    //   if (comment._id === commentId) {
+    //     return {
+    //       ...comment,
+    //       desc: value,
+    //     };
+    //   }
+    //   return comment;
+    // });
+    // setComments(updatedComments);
     setAffectedComment(null);
   };
 
   const deleteCommentHandler = (commentId) => {
-    const updatedComments = comments.filter(
-      (comment) => comment._id !== commentId
-    );
-    setComments(updatedComments);
-    setAffectedComment(null);
-  };
+  //   const updatedComments = comments.filter(
+  //     (comment) => comment._id !== commentId
+  //   );
+  //   setComments(updatedComments);
+  //   setAffectedComment(null);
+  // };
 
-  const getRepliesHandler = (commentId) => {
-    return comments
-      .filter((comment) => comment.parent === commentId)
-      .sort((a, b) => {
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-      });
+  // const getRepliesHandler = (commentId) => {
+  //   return comments
+  //     .filter((comment) => comment.parent === commentId)
+  //     .sort((a, b) => {
+  //       return (
+  //         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  //       );
+  //     });
   };
   return (
     <div className={`${className}`}>
@@ -75,8 +74,8 @@ const CommentsContainer = ({ className, loggedInUserId }) => {
         formSubmitHandler={(value) => addCommentHandler(value)}
       />
 
-      <div className="space-y-4 mt-8">
-        {mainComments.map((comment, index) => (
+      <div className="mt-8 space-y-4">
+        {comments.map((comment, index) => (
           <Comment
             key={index}
             comment={comment}
@@ -86,7 +85,7 @@ const CommentsContainer = ({ className, loggedInUserId }) => {
             addComment={addCommentHandler}
             updateComment={updateCommentHandler}
             deleteComment={deleteCommentHandler}
-            replies={getRepliesHandler(comment._id)}
+            replies={comment.replies}
           />
         ))}
       </div>

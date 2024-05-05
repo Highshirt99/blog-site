@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "../../components/MainLayout";
 import BreadCrumbs from "../../components/BreadCrumbs";
-import { images } from "../../constants";
-import { Link } from "react-router-dom";
+import { images, stables } from "../../constants";
+import { Link, useParams } from "react-router-dom";
 import SuggestedPosts from "./container/SuggestedPosts";
 import CommentsContainer from "../../components/comments/CommentsContainer";
 import SocialShareButtons from "../../components/SocialShareButtons";
-
-const breadCrumbsData = [
-  { name: "Home", link: "/" },
-  { name: "Blog", link: "/blog" },
-  { name: "Article title", link: "/blog/:id" },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getSinglePost } from "../../services/index/posts";
+import { generateHTML } from "@tiptap/react";
+import Bold from "@tiptap/extension-bold";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import Italic from "@tiptap/extension-italic";
+import parse from "html-react-parser";
+import ArticleDetailSkeleton from "./ArticleDetailSkeleton";
+import ErrorMessage from "../../components/ErrorMessage";
+import { useSelector } from "react-redux";
 
 const postsData = [
   {
@@ -51,65 +57,96 @@ const tagsData = [
 ];
 
 const ArticleDetailPage = () => {
+  const { slug } = useParams();
+  const userState = useSelector((state) => state.user);
+  const [breadCrumbsData, setBreadCrumbsData] = useState([]);
+  const [body, setBody] = useState(null);
+
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => getSinglePost({ slug }),
+    queryKey: ["blog", slug],
+  });
+
+  useEffect(() => {
+    if (data) {
+      setBreadCrumbsData([
+        { name: "Home", link: "/" },
+        { name: "Blog", link: "/blog" },
+        { name: "Article title", link: `/blog/${slug}` },
+      ]);
+
+      setBody(
+        parse(
+          generateHTML(data?.body, [Bold, Document, Paragraph, Text, Italic])
+        )
+      );
+    }
+  }, [data, slug]);
+
   return (
     <MainLayout>
-      <section className="container flex flex-col max-w-5xl p-5 mx-auto lg:flex-row lg:gap-x-5 lg:items-start">
-        <article className="flex-1">
-          <BreadCrumbs data={breadCrumbsData} />
-          <img
-            className="w-full rounded-xl"
-            src={images.post1Image}
-            alt="laptop"
-          />
-          <Link
-            to="/blog?category=selectedCategory"
-            className="inline-block mt-4 text-sm text-primary md:text-base"
-          >
-            EDUCATION
-          </Link>
-          <h1 className="text-xl font-medium mt-4 text-dark-hard md:text-[26px]">
-            Help children get better education
-          </h1>
-          <div className="mt-4 text-dark-soft">
-            <p className="leading-7">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Autem
-              excepturi omnis fugiat ullam sunt exercitationem cupiditate rem
-              iste tempora quibusdam nisi doloremque numquam itaque aliquam
-              aspernatur, dolores expedita inventore minus. Lorem ipsum dolor
-              sit amet consectetur, adipisicing elit. Cupiditate enim, ducimus
-              reprehenderit odio laudantium molestias recusandae, nihil ex
-              adipisci earum atque inventore officiis quos, fugiat soluta unde
-              sed placeat. Officia. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Atque labore in dolore, rerum laudantium dicta
-              nesciunt a? Rem reiciendis culpa facilis, quos, molestiae repellat
-              delectus unde ea accusamus incidunt assumenda!
-            </p>
-          </div>
-          <CommentsContainer className="mt-10" loggedInUserId="a" />
-        </article>
-        <div>
-          <SuggestedPosts
-            header="Latest Article"
-            posts={postsData}
-            tags={tagsData}
-            className="mt-8 lg:mt-0 lg:max-w-xs"
-          />
-
-          <div className="mt-7">
-            <h2 className="font-[opensans] font-medium text-dark-hard mb-4 md:text-xl">
-              Share on:
-            </h2>
-            <SocialShareButtons
-              url={encodeURI(
-                "https://moonfo.com/post/client-side-and-server-side-explanation"
-              )}
-              title={encodeURIComponent(
-                "Client-side and Server-sdide explanation"
-              )}
+      {isLoading ? (
+        <ArticleDetailSkeleton />
+      ) : isError ? (
+        <ErrorMessage message="Couldn't fetch the post data." />
+      ) : (
+        <section className="container flex flex-col max-w-5xl p-5 mx-auto lg:flex-row lg:gap-x-5 lg:items-start">
+          <article className="flex-1">
+            <BreadCrumbs data={breadCrumbsData} />
+            <img
+              className="w-full rounded-xl"
+              src={
+                data?.photo
+                  ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
+                  : images.samplePostImage
+              }
+              alt="data?.title"
             />
+
+            <div className="flex gap-2 mt-4">
+              {data?.categories.map((category, index) => {
+                <Link
+                  key={index}
+                  to={`/blog?category=${category.name}`}
+                  className="inline-block mt-4 text-sm text-primary md:text-base"
+                >
+                  {category.name}
+                </Link>;
+              })}
+            </div>
+
+            <h1 className="text-xl font-medium mt-4 text-dark-hard md:text-[26px]">
+              {data?.title}
+            </h1>
+            <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
+            <CommentsContainer className="mt-10" 
+             loggedInUserId={userState?.userInfo?._id}
+             comments = {data?.comments} />
+          </article>
+          <div>
+            <SuggestedPosts
+              header="Latest Article"
+              posts={postsData}
+              tags={tagsData}
+              className="mt-8 lg:mt-0 lg:max-w-xs"
+            />
+
+            <div className="mt-7">
+              <h2 className="font-[opensans] font-medium text-dark-hard mb-4 md:text-xl">
+                Share on:
+              </h2>
+              <SocialShareButtons
+                url={encodeURI(
+                  "https://moonfo.com/post/client-side-and-server-side-explanation"
+                )}
+                title={encodeURIComponent(
+                  "Client-side and Server-sdide explanation"
+                )}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </MainLayout>
   );
 };

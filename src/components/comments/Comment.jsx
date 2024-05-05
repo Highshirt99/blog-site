@@ -1,5 +1,5 @@
 import React from "react";
-import { images } from "../../constants";
+import {stables, images } from "../../constants";
 import { FiEdit2, FiMessageSquare, FiTrash } from "react-icons/fi";
 import CommentForm from "./CommentForm";
 
@@ -31,12 +31,12 @@ export const Comment = ({
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg">
       <img
-        src={images.PostProfileImage}
+        src={comment?.user?.avatar ? stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar : images.userImage}
         alt="user profile"
-        className="w-9 h-9 object-cover rounded-full"
+        className="object-cover rounded-full w-9 h-9"
       />
-      <div className="flex-1 flex flex-col">
-        <h5 className="font-bold text-dark-hard text-xs lg:text-sm">
+      <div className="flex flex-col flex-1">
+        <h5 className="text-xs font-bold text-dark-hard lg:text-sm">
           {comment.user.name}
         </h5>
         <span className="text-xs text-dark-light">
@@ -61,7 +61,7 @@ export const Comment = ({
             initialText={comment.desc}
           />
         )}
-        <div className="flex items-center space-x-2 text-dark-light text-sm mt-3 mb-3">
+        <div className="flex items-center mt-3 mb-3 space-x-2 text-sm text-dark-light">
           {isUserLoggedIn && (
             <button
               className="flex items-center space-x-2"
