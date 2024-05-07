@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { stables, images } from "../../../constants";
 
 const SuggestedPosts = ({ className, header, posts = [], tags }) => {
   return (
@@ -14,19 +15,23 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
             className="flex flex-no-wrap items-center space-x-3"
           >
             <img
-              src={item.image}
-              alt="laptop"
+              src={
+                item?.photo
+                  ? stables.UPLOAD_FOLDER_BASE_URL + item.photo
+                  : images.samplePostImage
+              }
+              alt={item.photo}
               className="w-1/5 rounded-lg aspect-square oject-cover"
             />
             <div className="text-sm font-medium text-dark-hard">
               <h3 className="text-sm font-medium text-dark-hard md:text-base lg:text-lg">
-                {item.title}
+                <Link to={`/blog/${item.slug}`}>{item.title}</Link>
               </h3>
               <span>
                 {new Date(item.createdAt).toLocaleDateString("en-US", {
                   day: "numeric",
                   month: "short",
-                  year: "numeric"
+                  year: "numeric",
                 })}
               </span>
             </div>
@@ -34,7 +39,9 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
         ))}
       </div>
       <h2 className="mt-8 font-medium text-dark-hard md:text-xl">Tags</h2>
-      <div className="flex flex-wrap mt-4 gap-x-2 gap-y-2">
+
+      {
+        tags.length === 0 ? <p className="text-slate-500 text-xs mt-2">There are no tags for this post</p> : <div className="flex flex-wrap mt-4 gap-x-2 gap-y-2">
         {tags.map((item) => (
           <Link
             to="/"
@@ -45,6 +52,8 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
           </Link>
         ))}
       </div>
+      }
+      
     </div>
   );
 };

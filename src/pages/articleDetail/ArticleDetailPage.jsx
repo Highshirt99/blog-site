@@ -18,43 +18,10 @@ import parse from "html-react-parser";
 import ArticleDetailSkeleton from "./ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
+import { getAllPosts } from "../../services/index/posts";
 
-const postsData = [
-  {
-    id: "1",
-    image: images.post1Image,
-    title: "Help children get better education",
-    createdAt: "2022-12-31T17:22:05.092+0000",
-  },
-  {
-    id: "2",
-    image: images.post1Image,
-    title: "Help children get better education",
-    createdAt: "2022-12-31T17:22:05.092+0000",
-  },
-  {
-    id: "3",
-    image: images.post1Image,
-    title: "Help children get better education",
-    createdAt: "2022-12-31T17:22:05.092+0000",
-  },
-  {
-    id: "4",
-    image: images.post1Image,
-    title: "Help children get better education",
-    createdAt: "2022-12-31T17:22:05.092+0000",
-  },
-];
 
-const tagsData = [
-  "Medical",
-  "Lifestyle",
-  "Learn",
-  "Healthy",
-  "Food",
-  "Diet",
-  "Education",
-];
+
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
@@ -65,6 +32,10 @@ const ArticleDetailPage = () => {
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
     queryKey: ["blog", slug],
+  });
+  const { data: postsData } = useQuery({
+    queryFn: () => getAllPosts(),
+    queryKey: ["posts"],
   });
 
   useEffect(() => {
@@ -104,30 +75,33 @@ const ArticleDetailPage = () => {
             />
 
             <div className="flex gap-2 mt-4">
-              {data?.categories.map((category, index) => {
+              {data?.categories.map((category, index) => (
                 <Link
                   key={index}
                   to={`/blog?category=${category.name}`}
                   className="inline-block mt-4 text-sm text-primary md:text-base"
                 >
                   {category.name}
-                </Link>;
-              })}
+                </Link>
+              ))}
             </div>
 
             <h1 className="text-xl font-medium mt-4 text-dark-hard md:text-[26px]">
               {data?.title}
             </h1>
             <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
-            <CommentsContainer className="mt-10" 
-             loggedInUserId={userState?.userInfo?._id}
-             comments = {data?.comments} />
+            <CommentsContainer
+              className="mt-10"
+              loggedInUserId={userState?.userInfo?._id}
+              comments={data?.comments}
+              postSlug={slug}
+            />
           </article>
           <div>
             <SuggestedPosts
               header="Latest Article"
               posts={postsData}
-              tags={tagsData}
+              tags={data?.tags}
               className="mt-8 lg:mt-0 lg:max-w-xs"
             />
 
@@ -137,10 +111,10 @@ const ArticleDetailPage = () => {
               </h2>
               <SocialShareButtons
                 url={encodeURI(
-                  "https://moonfo.com/post/client-side-and-server-side-explanation"
+                 (window.location.href)
                 )}
                 title={encodeURIComponent(
-                  "Client-side and Server-sdide explanation"
+                  data?.title
                 )}
               />
             </div>
@@ -152,3 +126,4 @@ const ArticleDetailPage = () => {
 };
 
 export default ArticleDetailPage;
+ 
