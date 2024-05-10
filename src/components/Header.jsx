@@ -116,7 +116,7 @@ const Header = () => {
   return (
     <section className="sticky top-0 left-0 right-0 z-50 bg-white ">
       <header className="container flex items-center justify-between px-5 py-4 mx-auto ">
-        <Link to = "/">
+        <Link to="/">
           <img src={images.logo} alt="Logo" className="w-[70px]" />
         </Link>
 
@@ -160,6 +160,15 @@ const Header = () => {
                     } transition-all duration-500 pt-4 absolute left-40 lg:left-0  lg:transform lg:translate-y-10 group-hover:block w-max`}
                   >
                     <ul className="flex flex-col p-4 overflow-hidden text-center rounded-lg shadow-lg bg-dark-soft lg:bg-transparent gap-y-3">
+                      {userState?.userInfo?.admin && (
+                        <button
+                          type="button"
+                          onClick={() => navigate("/admin")}
+                          className="w-full px-4 py-2 text-white no-underline rounded-md hover:bg-dark-hard hover:text-white lg:text-dark-soft"
+                        >
+                          Admin Dashboard
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => navigate("/profile")}
