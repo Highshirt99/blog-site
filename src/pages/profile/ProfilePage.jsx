@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import MainLayout from "../../components/MainLayout";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -16,11 +16,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
 
-  const {
-    data: profileData,
-    isLoading: profileIsLoading,
-    error: profileError,
-  } = useQuery({
+  const { data: profileData, isLoading: profileIsLoading } = useQuery({
     queryFn: () => {
       return getUserProfile({ token: userState.userInfo.token });
     },
@@ -34,14 +30,14 @@ const ProfilePage = () => {
         userData: { name, email, password },
       });
     },
-    
+
     onSuccess: (data) => {
       dispatch(userActions.setUserInfo(data));
       localStorage.setItem("account", JSON.stringify(data));
       queryClient.invalidateQueries(["profile"]);
       toast.success("Profile updated successfully");
     },
-    
+
     onError: (error) => {
       toast.error(error.message);
       console.log(error);
@@ -64,15 +60,17 @@ const ProfilePage = () => {
       email: "",
       password: "",
     },
-    values: {
-      name: profileIsLoading ? "" : profileData.name,
-      email: profileIsLoading ? "" : profileData.email,
-    },
+    values: useMemo(() => {
+      return {
+        name: profileIsLoading ? "" : profileData.name,
+        email: profileIsLoading ? "" : profileData.email,
+      };
+    }, [profileData?.email, profileData?.name, profileIsLoading]),
 
     mode: "onChange",
   });
 
-  const submitHandler = ({name, email, password}) => {
+  const submitHandler = ({ name, email, password }) => {
     mutate({ name, email, password });
   };
 
@@ -80,7 +78,6 @@ const ProfilePage = () => {
     <MainLayout>
       <section className="container px-5 py-10 mx-auto">
         <div className="w-full max-w-sm mx-auto">
-
           <ProfilePicture avatar={profileData?.avatar} />
           <form onSubmit={handleSubmit(submitHandler)}>
             <div className="flex flex-col w-full mb-6">
