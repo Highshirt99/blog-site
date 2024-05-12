@@ -15,18 +15,18 @@ export const Comment = ({
   replies,
 }) => {
   const isUserLoggedIn = Boolean(loggedInUserId);
-  const commentBelongsToUser = loggedInUserId === comment.user._id;
+  const commentBelongsToUser = loggedInUserId === comment?.user?._id;
   const isReplying =
     affectedComment &&
     affectedComment.type === "replying" &&
-    affectedComment._id === comment._id;
+    affectedComment._id === comment?._id;
   const isEditing =
     affectedComment &&
     affectedComment.type === "editing" &&
-    affectedComment._id === comment._id;
+    affectedComment?._id === comment?._id;
 
-  const repliedCommentId = parentId ? parentId : comment._id;
-  const replyOnUserId = comment.user._id;
+  const repliedCommentId = parentId ? parentId : comment?._id;
+  const replyOnUserId = comment?.user?._id;
 
   return (
     <div className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg">
@@ -37,10 +37,10 @@ export const Comment = ({
       />
       <div className="flex flex-col flex-1">
         <h5 className="text-xs font-bold text-dark-hard lg:text-sm">
-          {comment.user.name}
+          {comment?.user?.name}
         </h5>
         <span className="text-xs text-dark-light">
-          {new Date(comment.createdAt).toLocaleDateString("en-US", {
+          {new Date(comment?.createdAt).toLocaleDateString("en-US", {
             day: "numeric",
             month: "short",
             year: "numeric",
@@ -49,16 +49,16 @@ export const Comment = ({
         </span>
         {!isEditing && (
           <p className="font-[opensans] mt-[10px] text-dark-light">
-            {comment.desc}
+            {comment?.desc}
           </p>
         )}
 
         {isEditing && (
           <CommentForm
             btnLabel="Update"
-            formSubmitHandler={(value) => updateComment(value, comment._id)}
+            formSubmitHandler={(value) => updateComment(value, comment?._id)}
             formCancelHandler={() => setAffectedComment(null)}
-            initialText={comment.desc}
+            initialText={comment?.desc}
           />
         )}
         <div className="flex items-center mt-3 mb-3 space-x-2 text-sm text-dark-light">
@@ -66,7 +66,7 @@ export const Comment = ({
             <button
               className="flex items-center space-x-2"
               onClick={() =>
-                setAffectedComment({ type: "replying", _id: comment._id })
+                setAffectedComment({ type: "replying", _id: comment?._id })
               }
             >
               <FiMessageSquare className="w-4 h-auto" />
@@ -79,7 +79,7 @@ export const Comment = ({
               <button
                 className="flex items-center space-x-2"
                 onClick={() =>
-                  setAffectedComment({ type: "editing", _id: comment._id })
+                  setAffectedComment({ type: "editing", _id: comment?._id })
                 }
               >
                 <FiEdit2 className="w-4 h-auto" />
@@ -87,7 +87,7 @@ export const Comment = ({
               </button>
               <button
                 className="flex items-center space-x-2"
-                onClick={() => deleteComment(comment._id)}
+                onClick={() => deleteComment(comment?._id)}
               >
                 <FiTrash className="w-4 h-auto" />
                 <span>Delete</span>
@@ -109,13 +109,13 @@ export const Comment = ({
           <div>
             {replies.map((reply) => (
               <Comment
-                key={reply._id}
+                key={reply?._id}
                 comment={reply}
                 loggedInUserId={loggedInUserId}
                 affectedComment={affectedComment}
                 setAffectedComment={setAffectedComment}
                 addComment={addComment}
-                parentId={comment._id}
+                parentId={comment?._id}
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 replies={[]}
