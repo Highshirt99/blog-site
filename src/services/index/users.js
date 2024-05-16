@@ -35,8 +35,8 @@ export const getUserProfile = async ({ token }) => {
   try {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        Authorization: `Bearer ${token}`
+      }
     };
     const { data } = await axios.get("/api/users/profile", config);
     return data;

@@ -8,20 +8,11 @@ import CommentsContainer from "../../components/comments/CommentsContainer";
 import SocialShareButtons from "../../components/SocialShareButtons";
 import { useQuery } from "@tanstack/react-query";
 import { getSinglePost } from "../../services/index/posts";
-import { generateHTML } from "@tiptap/react";
-import Bold from "@tiptap/extension-bold";
-import Document from "@tiptap/extension-document";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
-import Italic from "@tiptap/extension-italic";
-import parse from "html-react-parser";
 import ArticleDetailSkeleton from "./ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import { getAllPosts } from "../../services/index/posts";
-
-
-
+import parseJsonToHtml from "../../utils/parseJsonToHtml";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
@@ -46,11 +37,7 @@ const ArticleDetailPage = () => {
         { name: "Article title", link: `/blog/${slug}` },
       ]);
 
-      setBody(
-        parse(
-          generateHTML(data?.body, [Bold, Document, Paragraph, Text, Italic])
-        )
-      );
+      setBody(parseJsonToHtml(data?.body));
     }
   }, [data, slug]);
 
@@ -110,12 +97,8 @@ const ArticleDetailPage = () => {
                 Share on:
               </h2>
               <SocialShareButtons
-                url={encodeURI(
-                 (window.location.href)
-                )}
-                title={encodeURIComponent(
-                  data?.title
-                )}
+                url={encodeURI(window.location.href)}
+                title={encodeURIComponent(data?.title)}
               />
             </div>
           </div>
@@ -126,4 +109,3 @@ const ArticleDetailPage = () => {
 };
 
 export default ArticleDetailPage;
- 

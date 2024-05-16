@@ -23,15 +23,16 @@ const AdminLayout = () => {
   });
 
   useEffect(() => {
-    if (!data?.admin) {
-      navigate("/");
+    if (data && !data?.admin) {
       toast.error("You are not allowed to access admin panel.");
+      navigate("/");
+      
     }
-  }, [data?.admin, navigate]);
+  }, [data, data?.admin, navigate]);
 
   if (profileIsLoading) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="flex items-center justify-center w-full h-screen">
         <h3 className="text-2xl text-slate-700">Loading...</h3>
       </div>
     );
