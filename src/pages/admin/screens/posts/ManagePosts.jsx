@@ -38,9 +38,9 @@ const ManagePosts = () => {
       },
     });
 
-  useEffect(() => {
-    refetch();
-  }, [refetch, currentPage]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [refetch, currentPage]);
 
   const searchKeywordHandler = (e) => {
     const { value } = e.target;

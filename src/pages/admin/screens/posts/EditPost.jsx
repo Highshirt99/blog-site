@@ -3,12 +3,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSinglePost, updatePost } from "../../../../services/index/posts";
 import { useParams, Link } from "react-router-dom";
 import ErrorMessage from "../../../../components/ErrorMessage";
-import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
+// import parseJsonToHtml from "../../../../utils/parseJsonToHtml";
 import { stables } from "../../../../constants";
 import { HiOutlineCamera } from "react-icons/hi";
 import ArticleDetailSkeleton from "../../../articleDetail/ArticleDetailSkeleton";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import Editor from "../../../../components/editor/Editor";
+import axios from "axios";
 
 const EditPost = () => {
   const queryClient = useQueryClient();
@@ -49,7 +51,7 @@ const EditPost = () => {
   useEffect(() => {
     if (!isLoading && !isError) {
       setInitialPhoto(data?.photo);
-      setBody(parseJsonToHtml(data?.body));
+      // setBody(parseJsonToHtml(data?.body));
     }
   }, [data, isError, isLoading]);
 
@@ -65,8 +67,9 @@ const EditPost = () => {
       updatedData.append("postPicture", photo);
     } else if (initialPhoto && !photo) {
       const urlToObject = async (url) => {
-        let reponse = await fetch(url);
-        let blob = await reponse.blob();
+        let response = await fetch(url);
+
+        let blob = await response.blob();
         const file = new File([blob], initialPhoto, { type: blob.type });
         return file;
       };
@@ -78,7 +81,7 @@ const EditPost = () => {
       updatedData.append("postPicture", picture);
     }
 
-    updatedData.append("document", JSON.stringify({}));
+    updatedData.append("document", JSON.stringify({ body }));
 
     mutateUpdatePostDetail({
       updatedData,
@@ -150,12 +153,22 @@ const EditPost = () => {
             <h1 className="text-xl font-medium mt-4 text-dark-hard md:text-[26px]">
               {data?.title}
             </h1>
-            <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
+            <div className="w-full">
+              {!isLoading && !isError && (
+                <Editor
+                  content={data?.body}
+                  editable={true}
+                  onDataChange={(data) => {
+                    setBody(data);
+                  }}
+                />
+              )}
+            </div>
             <button
               disabled={isLoadingUpdatePostDetail}
               type="button"
               onClick={handleUpdatePost}
-              className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded-lg outline-none disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded-lg outline-none mt-5 disabled:cursor-not-allowed disabled:opacity-70"
             >
               Update Post
             </button>

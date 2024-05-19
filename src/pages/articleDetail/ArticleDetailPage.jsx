@@ -12,13 +12,14 @@ import ArticleDetailSkeleton from "./ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import { getAllPosts } from "../../services/index/posts";
-import parseJsonToHtml from "../../utils/parseJsonToHtml";
+// import parseJsonToHtml from "../../utils/parseJsonToHtml";
+import Editor from "../../components/editor/Editor";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setBreadCrumbsData] = useState([]);
-  const [body, setBody] = useState(null);
+  // const [body, setBody] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -37,7 +38,7 @@ const ArticleDetailPage = () => {
         { name: "Article title", link: `/blog/${slug}` },
       ]);
 
-      setBody(parseJsonToHtml(data?.body));
+      // setBody(parseJsonToHtml(data?.body));
     }
   }, [data, slug]);
 
@@ -76,7 +77,11 @@ const ArticleDetailPage = () => {
             <h1 className="text-xl font-medium mt-4 text-dark-hard md:text-[26px]">
               {data?.title}
             </h1>
-            <div className="mt-4 prose-sm prose sm:prose-base">{body}</div>
+            <div className="w-full">
+              {!isLoading && !isError && (
+                <Editor content={data?.body} editable={false} />
+              )}
+            </div>
             <CommentsContainer
               className="mt-10"
               loggedInUserId={userState?.userInfo?._id}
