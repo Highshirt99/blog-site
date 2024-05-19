@@ -12,14 +12,14 @@ import ArticleDetailSkeleton from "./ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import { getAllPosts } from "../../services/index/posts";
-// import parseJsonToHtml from "../../utils/parseJsonToHtml";
+import parseJsonToHtml from "../../utils/parseJsonToHtml";
 import Editor from "../../components/editor/Editor";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
   const userState = useSelector((state) => state.user);
   const [breadCrumbsData, setBreadCrumbsData] = useState([]);
-  // const [body, setBody] = useState(null);
+  const [body, setBody] = useState(null);
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
