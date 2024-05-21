@@ -10,7 +10,6 @@ import ArticleDetailSkeleton from "../../../articleDetail/ArticleDetailSkeleton"
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Editor from "../../../../components/editor/Editor";
-import axios from "axios";
 
 const EditPost = () => {
   const queryClient = useQueryClient();
@@ -40,7 +39,6 @@ const EditPost = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries(["blog", slug]);
       toast.success("Post is updated.");
-      //   navigate(`/admin/posts/manage/edit/${data.slug}`, { replace: true });
     },
     onError: (error) => {
       toast.error(error.message);

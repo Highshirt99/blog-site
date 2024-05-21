@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { getAllPosts, deletePost } from "../../../../services/index/posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { images, stables } from "../../../../constants";
@@ -38,9 +38,6 @@ const ManagePosts = () => {
       },
     });
 
-  // useEffect(() => {
-  //   refetch();
-  // }, [refetch, currentPage]);
 
   const searchKeywordHandler = (e) => {
     const { value } = e.target;
