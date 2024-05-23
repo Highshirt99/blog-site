@@ -1,9 +1,10 @@
+const mongoose = require("mongoose")
 const model = mongoose.model;
 const Schema = mongoose.Schema;
 
 const PostCategoriesSchema = new Schema(
     {
-    name: { type: String, required: true },
+    title: { type: String, required: true },
     },
     {
       timestamps: true,
