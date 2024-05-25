@@ -38,6 +38,7 @@ const ManagePosts = () => {
       },
     });
 
+    console.log(postsData)
 
   const searchKeywordHandler = (e) => {
     const { value } = e.target;
@@ -162,7 +163,7 @@ const ManagePosts = () => {
                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {post.categories.length > 0
-                              ? post.categories[0].name
+                              ? post.categories[0].title
                               : "Uncategorized"}
                           </p>
                         </td>

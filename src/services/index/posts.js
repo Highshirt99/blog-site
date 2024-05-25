@@ -60,6 +60,8 @@ export const updatePost = async ({ updatedData, slug, token }) => {
     throw new Error(error.message);
   }
 };
+
+
 export const createPost = async ({ token }) => {
   try {
     const config = {
