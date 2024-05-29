@@ -38,7 +38,6 @@ const ManagePosts = () => {
       },
     });
 
-    console.log(postsData)
 
   const searchKeywordHandler = (e) => {
     const { value } = e.target;
