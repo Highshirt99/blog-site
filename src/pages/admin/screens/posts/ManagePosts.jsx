@@ -1,58 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import { getAllPosts, deletePost } from "../../../../services/index/posts";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { images, stables } from "../../../../constants";
 import Pagination from "../../../../components/Pagination";
-import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDataTable } from "../../../../hooks/useDataTable";
 
 const ManagePosts = () => {
-  const queryClient = useQueryClient();
-  const userState = useSelector((state) => state.user);
-
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const {
-    data: postsData,
+    userState,
+    currentPage,
+    setCurrentPage,
     isLoading,
     isFetching,
-    refetch,
-  } = useQuery({
-    queryFn: () => getAllPosts(searchKeyword, currentPage),
-    queryKey: ["posts"],
+    data: postsData,
+    searchKeyword,
+    isLoadingDeleteData,
+    searchKeywordHandler,
+    submitSearchKeywordHandler,
+    deleteDataHandler,
+  } = useDataTable({
+    dataQueryFn: () => getAllPosts(searchKeyword, currentPage),
+    dataQueryKey: "posts",
+    deleteDataMessage: "Post is deleted.",
+    mutateDeleteFn: ({ slug, token }) => {
+      return deletePost({ slug, token });
+    }
   });
-
-  const { mutate: mutateDeletePost, isLoading: isLoadingDeletePost } =
-    useMutation({
-      mutationFn: ({ token, slug }) => {
-        return deletePost({ token, slug });
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries(["posts"]);
-        toast.success("Post is deleted.");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-        console.log(error);
-      },
-    });
-
-
-  const searchKeywordHandler = (e) => {
-    const { value } = e.target;
-    setSearchKeyword(value);
-  };
-
-  const submitSearchKeywordHandler = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    refetch();
-  };
-
-  const deletePostHandler = ({ slug, token }) => {
-    mutateDeletePost({ slug, token });
-  };
 
   return (
     <div>
@@ -162,7 +135,17 @@ const ManagePosts = () => {
                         <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {post.categories.length > 0
-                              ? post.categories[0].title
+                              ? post.categories
+                                  .slice(0, 3)
+                                  .map(
+                                    (category, index) =>
+                                      `${category.title}${
+                                        post.categories.slice(0, 3).length ===
+                                        index + 1
+                                          ? ""
+                                          : ", "
+                                      }`
+                                  )
                               : "Uncategorized"}
                           </p>
                         </td>
@@ -196,9 +179,9 @@ const ManagePosts = () => {
                           <button
                             type="button"
                             className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-                            disabled={isLoadingDeletePost}
+                            disabled={isLoadingDeleteData}
                             onClick={() => {
-                              deletePostHandler({
+                              deleteDataHandler({
                                 slug: post?.slug,
                                 token: userState.userInfo.token,
                               });
