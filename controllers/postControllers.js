@@ -104,6 +104,10 @@ const getPost = async (req, res, next) => {
     }).populate([
       { path: "user", select: ["avatar", "name"] },
       {
+        path: "categories",
+        select: ["title"],
+      },
+      {
         path: "comments",
         match: {
           check: true,
@@ -182,6 +186,10 @@ const getAllPosts = async (req, res, next) => {
         {
           path: "user",
           select: ["avatar", "name", "verified"],
+        },
+        {
+          path: "categories",
+          select: ["title"],
         },
       ])
       .sort({
