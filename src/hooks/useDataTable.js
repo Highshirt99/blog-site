@@ -3,8 +3,6 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 
-
-
 export const useDataTable = ({dataQueryFn, dataQueryKey, mutateDeleteFn, deleteDataMessage}) => {
     const queryClient = useQueryClient();
     const userState = useSelector((state) => state.user);

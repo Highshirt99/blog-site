@@ -24,7 +24,6 @@ const Comments = () => {
     submitSearchKeywordHandler,
     isLoadingDeleteData,
     deleteDataHandler,
-
   } = useDataTable({
     dataQueryFn: () =>
       getAllComments(userState.userInfo.token, searchKeyword, currentPage),
@@ -138,37 +137,38 @@ const Comments = () => {
             </p>
           </td>
           <td className="px-5 py-5 space-x-5 text-sm bg-white border-b border-gray-200">
-      <button
-        type="button"
-        className={`${comment?.check ? "text-yellow-600 hover:text-yellow-900" : "text-green-600 hover:text-greem-900"} disabled:opacity-70 disabled:cursor-not-allowed`}
-        disabled={isLoadingUpdateCommentCheck}
-        onClick={() => {
-        
-           mutateUpdateCommentCheck({
-            token: userState.userInfo.token,
-            check: comment?.check ? false : true,
-            commentId: comment?._id,
-           })
-         
-        }}
-      >
-       {comment?.check ? "Unapprove" : "Approve"}
-      </button>
-      <button
-        type="button"
-        className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-        disabled={isLoadingDeleteData}
-        onClick={() => {
-          deleteDataHandler({
-            slug: comment?._id,
-            token: userState.userInfo.token,
-          });
-        }}
-      >
-        Delete
-      </button>
-  
-    </td>
+            <button
+              type="button"
+              className={`${
+                comment?.check
+                  ? "text-yellow-600 hover:text-yellow-900"
+                  : "text-green-600 hover:text-greem-900"
+              } disabled:opacity-70 disabled:cursor-not-allowed`}
+              disabled={isLoadingUpdateCommentCheck}
+              onClick={() => {
+                mutateUpdateCommentCheck({
+                  token: userState.userInfo.token,
+                  check: comment?.check ? false : true,
+                  commentId: comment?._id,
+                });
+              }}
+            >
+              {comment?.check ? "Unapprove" : "Approve"}
+            </button>
+            <button
+              type="button"
+              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isLoadingDeleteData}
+              onClick={() => {
+                deleteDataHandler({
+                  slug: comment?._id,
+                  token: userState.userInfo.token,
+                });
+              }}
+            >
+              Delete
+            </button>
+          </td>
           {/* <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
       <p className="text-gray-900 whitespace-no-wrap">
         {post.categories.length > 0
