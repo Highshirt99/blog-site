@@ -3,7 +3,7 @@ import { getAllPosts, deletePost } from "../../../../services/index/posts";
 import { images, stables } from "../../../../constants";
 import { Link } from "react-router-dom";
 import { useDataTable } from "../../../../hooks/useDataTable";
-import DataTable from "../../../../components/DataTable";
+import DataTable from "../../components/DataTable";
 
 const ManagePosts = () => {
   const {
@@ -26,6 +26,8 @@ const ManagePosts = () => {
       return deletePost({ slug, token });
     },
   });
+
+  // console.log(postsData?.headers);
 
   return (
     <DataTable

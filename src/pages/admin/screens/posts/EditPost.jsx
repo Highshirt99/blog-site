@@ -9,7 +9,7 @@ import ArticleDetailSkeleton from "../../../articleDetail/ArticleDetailSkeleton"
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Editor from "../../../../components/editor/Editor";
-import MultiSelectTagDropdown from "../../../../components/select-dropdown/MultiSelectTagDropdown";
+import MultiSelectTagDropdown from "../../components/select-dropdown/MultiSelectTagDropdown";
 import { getAllCategories } from "../../../../services/index/postCategories";
 import {
   categoryToOption,

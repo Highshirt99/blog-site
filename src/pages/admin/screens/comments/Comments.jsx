@@ -7,7 +7,7 @@ import { stables, images } from "../../../../constants";
 import { Link } from "react-router-dom";
 import { useDataTable } from "../../../../hooks/useDataTable";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import DataTable from "../../../../components/DataTable";
+import DataTable from "../../components/DataTable";
 import toast from "react-hot-toast";
 
 const Comments = () => {
