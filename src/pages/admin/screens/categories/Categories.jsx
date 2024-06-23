@@ -44,6 +44,7 @@ const Categories = () => {
     submitSearchKeywordHandler,
     deleteDataHandler,
     setCurrentPage,
+
   } = useDataTable({
     dataQueryFn: () => getAllCategories(searchKeyword, currentPage),
     dataQueryKey: "categories",

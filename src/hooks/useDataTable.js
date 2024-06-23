@@ -60,6 +60,7 @@ export const useDataTable = ({dataQueryFn, dataQueryKey, mutateDeleteFn, deleteD
         searchKeywordHandler,
         submitSearchKeywordHandler,
         deleteDataHandler,
+        queryClient
     }
   
 }

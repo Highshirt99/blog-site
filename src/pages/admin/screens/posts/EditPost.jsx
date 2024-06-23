@@ -19,7 +19,7 @@ import CreatableSelect from "react-select/creatable";
 
 const promiseOptions = async (inputValue) => {
   const categoriesData = await getAllCategories();
-  return filterCategories(inputValue, categoriesData);
+  return filterCategories(inputValue, categoriesData?.data);
 };
 
 const EditPost = () => {

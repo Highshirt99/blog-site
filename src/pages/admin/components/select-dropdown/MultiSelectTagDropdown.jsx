@@ -7,7 +7,7 @@ const MultiSelectTagDropdown = ({ defaultValue = [], loadOptions, onChange }) =>
       defaultOptions
       isMulti
       loadOptions={loadOptions}
-      className="relative z-20"
+      className="relative z-[1000]"
       onChange={onChange}
     />
   );
