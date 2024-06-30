@@ -4,7 +4,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { images } from "../../../../constants";
 import { useEffect, useState } from "react";
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { FaComments } from "react-icons/fa";
+import { FaComments, FaUser } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import NavItem from "./NavItem";
 import NavItemCollapse from "./NavItemCollapse";
@@ -80,7 +80,7 @@ const Header = () => {
           {/* sidebar */}
           <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:p-6">
             <Link to="/">
-              <img src={images.Logo} alt="logo" className="w-16" />
+              <img src={images.logo} alt="logo" className="w-16" />
             </Link>
             <h4 className="mt-10 font-bold text-[#C7C7C7]">MAIN MENU</h4>
             {/* menu items */}
@@ -122,14 +122,14 @@ const Header = () => {
                 <Link to="/admin/categories/manage">Categories</Link>
               </NavItemCollapse>
 
-              {/* <NavItem
+              <NavItem
                 title="Users"
                 link="/admin/users/manage"
                 icon={<FaUser className="text-xl" />}
                 name="users"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
-              /> */}
+              /> 
             </div>
           </div>
         </div>

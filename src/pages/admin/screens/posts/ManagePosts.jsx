@@ -27,7 +27,6 @@ const ManagePosts = () => {
     },
   });
 
-  // console.log(postsData?.headers);
 
   return (
     <DataTable
@@ -53,7 +52,7 @@ const ManagePosts = () => {
               <div className="flex-shrink-0">
                 <a href="/" className="relative block">
                   <img
-                    alt="post.title"
+                    alt={post.title}
                     src={
                       post?.photo
                         ? stables.UPLOAD_FOLDER_BASE_URL + post.photo

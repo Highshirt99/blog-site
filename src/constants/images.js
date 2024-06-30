@@ -8,6 +8,7 @@ import CtaImage from "../assets/CtaImage.jpg"
 const samplePostImage = "/images/sample.jpg"
 const userImage = "/images/user.png"
 
+
 const images = {
   HeroImg,
   post1Image,
@@ -15,7 +16,8 @@ const images = {
   PostProfileImage,
   CtaImage,
   samplePostImage,
-  userImage
+  userImage,
+
 };
 
 export default images;

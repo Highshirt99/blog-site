@@ -53,10 +53,10 @@ const DataTable = ({
               <table className="min-w-full leading-normal">
                 <thead>
                   <tr>
-                    {tableHeaderTitleList.map((title) => (
+                    {tableHeaderTitleList.map((title, index) => (
                       <th
                         scope="col"
-                        key={title}
+                        key={index}
                         className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200"
                       >
                         {title}
