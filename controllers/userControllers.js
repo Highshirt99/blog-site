@@ -1,6 +1,8 @@
 const uploadPicture = require("../middleware/uploadPictureMiddleware");
 const User = require("../models/User");
 const fileRemover = require("../utils/fileRemover");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 
 // Register user
 const registerUser = async (req, res, next) => {
@@ -91,10 +93,23 @@ const userProfile = async (req, res, next) => {
 
 const updateProfile = async (req, res, next) => {
   try {
-    let user = await User.findById(req.user._id);
+    const userIdToUpdate = req.params.userId;
+    let userId = req.user._id;
+    if (!req.user.admin && userId !== userIdToUpdate) {
+      let error = new Error("Forbidden resource");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    let user = await User.findById(userIdToUpdate);
     if (!user) {
       new Error("User not found");
     }
+    
+    if (typeof req.body.admin !== "undefined" && req.user.admin) {
+      user.admin = req.body.admin;
+    }
+
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     if (req.body.password && req.body.password.length <= 5) {
@@ -177,10 +192,78 @@ const updateProfilePicture = async (req, res, next) => {
   }
 };
 
+const getAllUsers = async (req, res, next) => {
+  try {
+    const filter = req.query.searchKeyword;
+    let where = {};
+    if (filter) {
+      where.email = { $regex: filter, $options: "i" };
+    }
+    let query = User.find(where);
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * pageSize;
+    const total = await User.find(where).countDocuments();
+    const pages = Math.ceil(total / pageSize);
+
+    res.header({
+      "x-filter": filter,
+      "x-totalcount": JSON.stringify(total),
+      "x-currentpage": JSON.stringify(page),
+      "x-pagesize": JSON.stringify(pageSize),
+      "x-totalpagecount": JSON.stringify(pages),
+    });
+
+    if (page > pages) {
+      return res.json([]);
+    }
+
+    const result = await query.skip(skip).limit(pageSize);
+
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteUser = async (req, res, next) => {
+  try {
+    let user = await User.findById(req.params.userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const postsToDelete = await Post.find({ user: user._id });
+    const postIdsToDelete = postsToDelete.map((post) => post._id);
+
+    await Comment.deleteMany({
+      post: { $in: postIdsToDelete },
+    });
+
+    await Post.deleteMany({
+      _id: { $in: postIdsToDelete },
+    });
+
+    postsToDelete.forEach((post) => {
+      fileRemover(post.photo);
+    });
+
+    await user.deleteOne();
+    fileRemover(user.avatar);
+
+    res.status(204).json({ message: "User is deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   userProfile,
   updateProfile,
   updateProfilePicture,
+  getAllUsers,
+  deleteUser,
 };
