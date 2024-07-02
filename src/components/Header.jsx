@@ -7,16 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/actions/user";
 import { useNavigate } from "react-router-dom";
 
-const navItemInfo = [
+const navItemsInfo = [
   {
     name: "Home",
     type: "link",
     href: "/",
   },
   {
-    name: "Articles",
+    name: "Blog",
     type: "link",
-    href: "/articles",
+    href: "/blog",
   },
   {
     name: "Pages",
@@ -139,7 +139,7 @@ const Header = () => {
           } transition-all duration-300 mt-[56px] lg:mt-0 bg-dark-hard lg:bg-transparent z-[49] flex flex-col w-full lg:w-auto justify-center lg:justify-end lg:flex-row  fixed top-0 bottom-0 lg:static gap-x-9 items-center`}
         >
           <ul className="flex items-center gap-x-2 z-[49] gap-y-5 flex-col lg:flex-row list-none text-[14px] font-semibold">
-            {navItemInfo.map((item) => (
+            {navItemsInfo.map((item) => (
               <NavItem key={item.name} item={item} />
             ))}
           </ul>

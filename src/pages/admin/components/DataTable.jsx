@@ -1,11 +1,10 @@
-import React from "react";
 import Pagination from "../../../components/Pagination";
 
 const DataTable = ({
   pageTitle,
   dataListName,
   searchKeywordOnSubmitHandler,
-  searchInputPlaceholder,
+  searchInputPlaceHolder,
   searchKeywordOnChangeHandler,
   searchKeyword,
   tableHeaderTitleList,
@@ -20,21 +19,22 @@ const DataTable = ({
   return (
     <div>
       <h1 className="text-2xl font-semibold">{pageTitle}</h1>
-      <div className="w-full px-4 mx-auto ">
+
+      <div className="w-full px-4 mx-auto">
         <div className="py-8">
           <div className="flex flex-row justify-between w-full mb-1 sm:mb-0">
             <h2 className="text-2xl leading-tight">{dataListName}</h2>
             <div className="text-end">
               <form
-                className="flex flex-col justify-center w-3/4 max-w-sm space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0"
                 onSubmit={searchKeywordOnSubmitHandler}
+                className="flex flex-col justify-center w-3/4 max-w-sm space-y-3 md:flex-row md:w-full md:space-x-3 md:space-y-0"
               >
-                <div className="relative ">
+                <div className=" relative ">
                   <input
                     type="text"
                     id='"form-subscribe-Filter'
-                    className="flex-1 w-full px-4 py-2 text-base text-gray-700 placeholder-gray-400 bg-white border border-transparent border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                    placeholder={searchInputPlaceholder}
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    placeholder={searchInputPlaceHolder}
                     onChange={searchKeywordOnChangeHandler}
                     value={searchKeyword}
                   />
@@ -55,8 +55,8 @@ const DataTable = ({
                   <tr>
                     {tableHeaderTitleList.map((title, index) => (
                       <th
-                        scope="col"
                         key={index}
+                        scope="col"
                         className="px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200"
                       >
                         {title}
@@ -67,14 +67,14 @@ const DataTable = ({
                 <tbody>
                   {isLoading || isFetching ? (
                     <tr>
-                      <td colSpan="5" className="w-full py-10 text-center">
+                      <td colSpan={5} className="text-center py-10 w-full">
                         Loading...
                       </td>
                     </tr>
                   ) : data?.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="w-full py-10 text-center">
-                        No record found
+                      <td colSpan={5} className="text-center py-10 w-full">
+                        No records found
                       </td>
                     </tr>
                   ) : (
@@ -82,7 +82,6 @@ const DataTable = ({
                   )}
                 </tbody>
               </table>
-
               {!isLoading && (
                 <Pagination
                   onPageChange={(page) => setCurrentPage(page)}

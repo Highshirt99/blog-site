@@ -1,6 +1,5 @@
-import React from "react";
-import { getAllPosts, deletePost } from "../../../../services/index/posts";
 import { images, stables } from "../../../../constants";
+import { deletePost, getAllPosts } from "../../../../services/index/posts";
 import { Link } from "react-router-dom";
 import { useDataTable } from "../../../../hooks/useDataTable";
 import DataTable from "../../components/DataTable";
@@ -9,30 +8,32 @@ const ManagePosts = () => {
   const {
     userState,
     currentPage,
-    setCurrentPage,
+    searchKeyword,
+    data: postsData,
     isLoading,
     isFetching,
-    data: postsData,
-    searchKeyword,
     isLoadingDeleteData,
     searchKeywordHandler,
     submitSearchKeywordHandler,
     deleteDataHandler,
+    setCurrentPage,
   } = useDataTable({
     dataQueryFn: () => getAllPosts(searchKeyword, currentPage),
     dataQueryKey: "posts",
-    deleteDataMessage: "Post is deleted.",
+    deleteDataMessage: "Post is deleted",
     mutateDeleteFn: ({ slug, token }) => {
-      return deletePost({ slug, token });
+      return deletePost({
+        slug,
+        token,
+      });
     },
   });
-
 
   return (
     <DataTable
       pageTitle="Manage Posts"
       dataListName="Posts"
-      searchInputPlaceholder="Post title"
+      searchInputPlaceHolder="Post title..."
       searchKeywordOnSubmitHandler={submitSearchKeywordHandler}
       searchKeywordOnChangeHandler={searchKeywordHandler}
       searchKeyword={searchKeyword}
@@ -52,13 +53,13 @@ const ManagePosts = () => {
               <div className="flex-shrink-0">
                 <a href="/" className="relative block">
                   <img
-                    alt={post.title}
                     src={
                       post?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + post.photo
+                        ? stables.UPLOAD_FOLDER_BASE_URL + post?.photo
                         : images.samplePostImage
                     }
-                    className="object-cover w-10 mx-auto rounded-lg aspect-square"
+                    alt={post.title}
+                    className="mx-auto object-cover rounded-lg w-10 aspect-square"
                   />
                 </a>
               </div>
@@ -87,30 +88,28 @@ const ManagePosts = () => {
             <p className="text-gray-900 whitespace-no-wrap">
               {new Date(post.createdAt).toLocaleDateString("en-US", {
                 day: "numeric",
-                year: "numeric",
                 month: "short",
+                year: "numeric",
               })}
             </p>
           </td>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex gap-x-2">
-              {post.tags.length > 0 ? (
-                post.tags.map((tag, index) => (
-                  <p key={tag}>
-                    {tag}
-                    {post.tags.length - 1 !== index && ","}
-                  </p>
-                ))
-              ) : (
-                <p>No tags</p>
-              )}
+              {post.tags.length > 0
+                ? post.tags.map((tag, index) => (
+                    <p>
+                      {tag}
+                      {post.tags.length - 1 !== index && ","}
+                    </p>
+                  ))
+                : "No tags"}
             </div>
           </td>
-          <td className="px-5 py-5 space-x-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
             <button
+              disabled={isLoadingDeleteData}
               type="button"
               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-              disabled={isLoadingDeleteData}
               onClick={() => {
                 deleteDataHandler({
                   slug: post?.slug,
