@@ -1,4 +1,4 @@
-import HeroImg from "../assets/HeroImage.svg";
+import HeroImage from "../assets/HeroImage.svg";
 import post1Image from "../assets/post1.jpg";
 import logo from "../assets/Logo.svg";
 import PostProfileImage from "../assets/post-profile.svg"
@@ -10,7 +10,7 @@ const userImage = "/images/user.png"
 
 
 const images = {
-  HeroImg,
+  HeroImage,
   post1Image,
   logo,
   PostProfileImage,
