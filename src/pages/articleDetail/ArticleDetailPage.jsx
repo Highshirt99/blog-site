@@ -59,7 +59,7 @@ const ArticleDetailPage = () => {
                   ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
                   : images.samplePostImage
               }
-              alt="data?.title"
+              alt={data?.title}
             />
 
             <div className="flex gap-2 mt-4">
