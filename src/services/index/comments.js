@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const baseUrl = process.env.REACT_APP_BASE_URL
+
 export const createNewComment = async ({
   token,
   desc,
@@ -14,7 +16,7 @@ export const createNewComment = async ({
       },
     };
     const { data } = await axios.post(
-      "/api/comments",
+      `${baseUrl}/api/comments`,
       {
         desc,
         slug,
@@ -40,7 +42,7 @@ export const updateComment = async ({ token, desc,  check , commentId}) => {
       },
     };
     const { data } = await axios.put(
-      `/api/comments/${commentId}`,
+      `${baseUrl}/api/comments/${commentId}`,
       {
         desc,
         check
@@ -63,7 +65,7 @@ export const deleteComment = async ({ token, commentId }) => {
       },
     };
     const { data } = await axios.delete(
-      `/api/comments/${commentId}`, config
+      `${baseUrl}/api/comments/${commentId}`, config
     );
     return data;
   } catch (error) {
@@ -82,7 +84,7 @@ export const getAllComments = async (token, searchKeyword = "", page = 1, limit 
       }
     }
     const { data, headers } = await axios.get(
-      `/api/comments?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`, config
+      `${baseUrl}/api/comments?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`, config
     );
     return { data, headers };
   } catch (error) {

@@ -1,10 +1,14 @@
 import axios from "axios";
 
+const baseUrl = process.env.REACT_APP_BASE_URL
+
+
 export const getAllPosts = async (searchKeyword = "", page = 1, limit = 10) => {
   try {
     const { data, headers } = await axios.get(
-      `/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
+      `${baseUrl}/api/posts?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
     );
+    
     return { data, headers };
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -16,7 +20,7 @@ export const getAllPosts = async (searchKeyword = "", page = 1, limit = 10) => {
 
 export const getSinglePost = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`/api/posts/${slug}`);
+    const { data } = await axios.get(`${baseUrl}/api/posts/${slug}`);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -34,7 +38,7 @@ export const deletePost = async ({ slug, token }) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/posts/${slug}`, config);
+    const { data } = await axios.delete(`${baseUrl}/api/posts/${slug}`, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message) {
@@ -52,7 +56,7 @@ export const updatePost = async ({ updatedData, slug, token }) => {
       },
     };
 
-    const { data } = await axios.put(`/api/posts/${slug}`, updatedData, config);
+    const { data } = await axios.put(`${baseUrl}/api/posts/${slug}`, updatedData, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -70,7 +74,7 @@ export const createPost = async ({ token }) => {
       },
     };
 
-    const { data } = await axios.post("/api/posts/", {}, config);
+    const { data } = await axios.post(`${baseUrl}/api/posts/`, {}, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)

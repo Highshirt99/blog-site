@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const baseUrl = process.env.REACT_APP_BASE_URL
+
 export const getAllCategories = async (
   searchKeyword = "",
   page = 1,
@@ -7,7 +9,7 @@ export const getAllCategories = async (
 ) => {
   try {
     const { data, headers } = await axios.get(
-      `/api/post-categories?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
+      `${baseUrl}/api/post-categories?searchKeyword=${searchKeyword}&page=${page}&limit=${limit}`
     );
     return { data, headers };
   } catch (error) {
@@ -25,7 +27,7 @@ export const deleteCategory = async ({ slug, token }) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/post-categories/${slug}`, config);
+    const { data } = await axios.delete(`${baseUrl}/api/post-categories/${slug}`, config);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
@@ -43,7 +45,7 @@ export const createCategory = async ({ token, title }) => {
     };
 
     const { data } = await axios.post(
-      `/api/post-categories`,
+      `${baseUrl}/api/post-categories`,
       { title },
       config
     );
@@ -64,7 +66,7 @@ export const updateCategory = async ({ token, title, slug }) => {
     };
 
     const { data } = await axios.put(
-      `/api/post-categories/${slug}`,
+      `${baseUrl}/api/post-categories/${slug}`,
       { title },
       config
     );
@@ -78,7 +80,7 @@ export const updateCategory = async ({ token, title, slug }) => {
 
 export const getSingleCategory = async ({ slug }) => {
   try {
-    const { data } = await axios.get(`/api/post-categories/${slug}`);
+    const { data } = await axios.get(`${baseUrl}/api/post-categories/${slug}`);
     return data;
   } catch (error) {
     if (error.response && error.response.data.message)
