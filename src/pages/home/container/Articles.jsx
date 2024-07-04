@@ -1,6 +1,5 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
-
 import ArticleCard from "../../../components/ArticleCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPosts } from "../../../services/index/posts";
@@ -21,7 +20,7 @@ const Articles = () => {
 
   return (
     <section className="container flex flex-col px-5 py-10 mx-auto">
-      <div className="flex flex-wrap pb-10  md:gap-x-5 gap-y-5">
+      <div className="flex flex-wrap pb-10 md:gap-x-5 gap-y-5">
         {isLoading ? (
           [...Array(3)].map((item, index) => (
             <ArticleCardSkeleton
@@ -31,15 +30,18 @@ const Articles = () => {
           ))
         ) : isError ? (
           <ErrorMessage message="Couldn't fetch the posts data" />
-        ) : (
-          data?.data.map((post) => (
+        ) : 
+          (data?.data?.map((post) => (
             <ArticleCard
               key={post._id}
               post={post}
               className="w-full md:w-[calc(50%-20px)] lg:w-[calc(33.33%-21px)]"
             />
-          ))
+          )
+        )
+          
         )}
+        
       </div>
       <Link
         to="/blog"
