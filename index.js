@@ -19,7 +19,13 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  exposedHeaders: ['x-totalpagecount'],
+};
+app.use(cors(corsOptions));
+
+
 
 
 app.get("/", (req, res) => {
