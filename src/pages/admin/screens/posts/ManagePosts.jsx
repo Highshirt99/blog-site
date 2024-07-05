@@ -29,6 +29,7 @@ const ManagePosts = () => {
     },
   });
 
+  // console.log(postsData)
   return (
     <DataTable
       pageTitle="Manage Posts"
@@ -46,7 +47,7 @@ const ManagePosts = () => {
       headers={postsData?.headers}
       userState={userState}
     >
-      {postsData?.data.map((post) => (
+      {postsData?.data?.map((post) => (
         <tr key={post._id}>
           <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
             <div className="flex items-center">
@@ -59,7 +60,7 @@ const ManagePosts = () => {
                         : images.samplePostImage
                     }
                     alt={post.title}
-                    className="mx-auto object-cover rounded-lg w-10 aspect-square"
+                    className="object-cover w-10 mx-auto rounded-lg aspect-square"
                   />
                 </a>
               </div>
@@ -105,7 +106,7 @@ const ManagePosts = () => {
                 : "No tags"}
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
+          <td className="px-5 py-5 space-x-5 text-sm bg-white border-b border-gray-200">
             <button
               disabled={isLoadingDeleteData}
               type="button"
