@@ -100,7 +100,7 @@ const Users = () => {
                   <img
                     alt={user.name}
                     src={
-                      user?.photo
+                      user?.avatar
                         ? stables.UPLOAD_FOLDER_BASE_URL + user.avatar
                         : images.userImage
                     }
