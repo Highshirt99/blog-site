@@ -101,7 +101,7 @@ const Users = () => {
                     alt={user.name}
                     src={
                       user?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + user.photo
+                        ? stables.UPLOAD_FOLDER_BASE_URL + user.avatar
                         : images.userImage
                     }
                     className="object-cover w-10 mx-auto rounded-lg aspect-square"
