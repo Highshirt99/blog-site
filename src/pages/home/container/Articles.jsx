@@ -17,7 +17,7 @@ const Articles = () => {
       console.log(error);
     },
   });
-console.log({ data, isLoading, isError })
+// console.log({ data, isLoading, isError })
   return (
     <section className="container flex flex-col px-5 py-10 mx-auto">
       <div className="flex flex-wrap pb-10 md:gap-x-5 gap-y-5">

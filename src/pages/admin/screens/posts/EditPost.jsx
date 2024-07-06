@@ -75,6 +75,8 @@ const EditPost = () => {
       setCategories(data.categories.map((item) => item._id));
       setTitle(data.title);
       setTags(data.tags);
+      setCaption(data.caption)
+  
    
       // setBody(parseJsonToHtml(data?.body));
     }
@@ -92,13 +94,11 @@ const EditPost = () => {
       updatedData.append("postPicture", photo);
     } else if (initialPhoto && !photo) {
       const urlToObject = async (url) => {
-        let response = await fetch(url);
-
-        let blob = await response.blob();
+        let reponse = await fetch(url);
+        let blob = await reponse.blob();
         const file = new File([blob], initialPhoto, { type: blob.type });
         return file;
       };
-
       const picture = await urlToObject(
         stables.UPLOAD_FOLDER_BASE_URL + data?.photo
       );
@@ -117,6 +117,7 @@ const EditPost = () => {
       token: userState.userInfo.token,
     });
   };
+
 
   const handleDeleteImage = () => {
     if (window.confirm("Do you want to delete your image?")) {
@@ -179,7 +180,7 @@ const EditPost = () => {
                 </Link>
               ))}
             </div>
-            <div className="d-form-control w-full">
+            <div className="w-full d-form-control">
               <label htmlFor="title" className="d-label">
                 <span className="d-label-text">Title</span>
               </label>
@@ -191,7 +192,7 @@ const EditPost = () => {
                 placeholder="title"
               />
             </div>
-            <div className="d-form-control w-full">
+            <div className="w-full d-form-control">
               <label htmlFor="caption" className="d-label">
                 <span className="d-label-text">Caption</span>
               </label>
@@ -203,7 +204,7 @@ const EditPost = () => {
                 placeholder="caption"
               />
             </div>
-            <div className="d-form-control w-full">
+            <div className="w-full d-form-control">
               <label htmlFor="title" className="d-label">
                 <span className="d-label-text">Slug</span>
               </label>
@@ -217,7 +218,7 @@ const EditPost = () => {
                 placeholder="post slug"
               />
             </div>
-            <div className="mb-5 mt-2">
+            <div className="mt-2 mb-5">
               <label htmlFor="" className="d-label">
                 <span className="d-label-text">Categories</span>
               </label>
@@ -232,7 +233,7 @@ const EditPost = () => {
               )}
             </div>
 
-            <div className="mb-5 mt-2">
+            <div className="mt-2 mb-5">
               <label htmlFor="" className="d-label">
                 <span className="d-label-text">Tags</span>
               </label>
@@ -267,7 +268,7 @@ const EditPost = () => {
               disabled={isLoadingUpdatePostDetail}
               type="button"
               onClick={handleUpdatePost}
-              className="w-full px-4 py-2 font-semibold text-white bg-green-500 rounded-lg outline-none mt-5 disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full px-4 py-2 mt-5 font-semibold text-white bg-green-500 rounded-lg outline-none disabled:cursor-not-allowed disabled:opacity-70"
             >
               Update Post
             </button>

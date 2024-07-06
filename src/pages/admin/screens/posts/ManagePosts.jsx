@@ -98,7 +98,7 @@ const ManagePosts = () => {
             <div className="flex gap-x-2">
               {post.tags.length > 0
                 ? post.tags.map((tag, index) => (
-                    <p>
+                    <p key={index}>
                       {tag}
                       {post.tags.length - 1 !== index && ","}
                     </p>
